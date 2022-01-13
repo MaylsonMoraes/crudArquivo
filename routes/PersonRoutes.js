@@ -1,6 +1,10 @@
 const router = require('express').Router()
+const req = require('express/lib/request')
+const { find } = require('../models/Person')
 const Person = require('../models/Person')
 
+
+//create - criação de dados
 router.post('/',async (req, res) => {
 
     //req.body
@@ -8,6 +12,7 @@ router.post('/',async (req, res) => {
 
     if (!modelo) {
         res.status(422).json({ error: 'O nome é obrigatório!' })
+        return
     }
 
     const person = {
@@ -26,6 +31,37 @@ router.post('/',async (req, res) => {
     } catch (error) {
         res.status(500).json({error: error})
     }
+})
+
+//read - leitura de dados
+router.get('/', async (req, res)=>{
+    try {
+
+        const people = await Person.find()
+        
+        res.status(200).json(people)
+      } catch (error) {
+        res.status(500).json({error: error})
+    }
+})
+router.get('/:id', async (req, res) =>{
+    // extrair o dado da requisição, pela url = req.params
+    const id = req.params.id
+
+    try {
+
+        const person = await Person.findOne({_id: id})
+
+        if(!person) {
+            res.status(422).json({message: 'O usuário não foi encontrado!'})
+            return
+        }
+
+      res.status(200).json(person)  
+    } catch (error) {
+        res.status(500).json({error: error})
+    }
+
 })
 
 module.exports = router
