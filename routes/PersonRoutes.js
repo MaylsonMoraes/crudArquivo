@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const req = require('express/lib/request')
-const { find } = require('../models/Person')
+const { find, update } = require('../models/Person')
 const Person = require('../models/Person')
 
 
@@ -50,7 +50,7 @@ router.get('/:id', async (req, res) =>{
 
     try {
 
-        const person = await Person.findOne({_id: id})
+        const person = await Person.findOne({ _id: id })
 
         if(!person) {
             res.status(422).json({message: 'O usuário não foi encontrado!'})
@@ -59,9 +59,49 @@ router.get('/:id', async (req, res) =>{
 
       res.status(200).json(person)  
     } catch (error) {
-        res.status(500).json({error: error})
+        res.status(500).json({ error: error })
     }
-
 })
+
+//Update - atualização de dados (PUT, PATCH)
+router.patch('/:id', async (req, res) =>{
+    const id = req.params.id
+
+    const {modelo, ano, fabricante, portas, approved} = req.body
+
+    const person = {
+        modelo, 
+        ano, 
+        fabricante, 
+        portas, 
+        approved
+    }
+    
+    try {
+        
+        const updatedPerson = await Person.updateOne({_id: id}, person)
+        
+        if(updatedPerson.matchedCount === 0){
+            res.status(422).json({message: 'O usuário não foi encontrado!'})
+        }
+        
+            res.status(200).json(person)
+
+    } catch (error) {
+        res.status(500).json({ error: error })
+    }
+})
+//DELETE - deletar dados
+router.delete('/:id', (req, res) =>{
+
+    const id = req.params.id
+
+    const person = Person.findOne({ _id: id })
+
+        if(!person) {
+            res.status(422).json({message: 'O usuário não foi encontrado!'})
+            return
+        }
+    })
 
 module.exports = router
