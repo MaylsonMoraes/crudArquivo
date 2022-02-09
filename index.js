@@ -1,3 +1,5 @@
+//configinicial
+require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
 const app = express()
@@ -14,15 +16,15 @@ app.use(
 app.use(express.json())
 
 //rotas da api
-const personRoutes = require('./routes/PersonRoutes')
+const fileRoutes = require('./routes/FileRoutes')
 
-app.use('/person', personRoutes)
+app.use('/file', fileRoutes)
 
 //rota inicial / endpoint
 app.get('/', (req, res) =>{
 
     //mostrar requisição
-    res.json({message:'Oi Express'})
+    res.json({message:'Funciona'})
 })
 //entregar uma porta
 
