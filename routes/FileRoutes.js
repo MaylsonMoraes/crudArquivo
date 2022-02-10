@@ -13,7 +13,7 @@ router.post('/',async (req, res) => {
         Criadoem, Modificadopor, Modificadoem, responsavel1, responsavel2, responsavel3, 
         approved} = req.body
 
-    if (!modelo) {
+    if (!File) {
         res.status(422).json({ error: 'O nome é obrigatório!' })
         return
     }
